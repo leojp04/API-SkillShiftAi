@@ -1,7 +1,0 @@
-.git
-.github
-.idea
-target
-node_modules
-Dockerfile
-*.log

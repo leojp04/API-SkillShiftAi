@@ -1,8 +1,8 @@
-# Build stage with Maven
+# Build stage with Maven (gera runner para JVM)
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /workspace/app
 COPY . .
-RUN mvn -B -DskipTests package
+RUN mvn -B -DskipTests package -Dquarkus.package.type=uber-jar
 
 # Runtime stage
 FROM eclipse-temurin:17-jre AS runtime
