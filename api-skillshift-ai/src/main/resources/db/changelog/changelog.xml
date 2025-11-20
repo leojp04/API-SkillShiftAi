@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="codex">
+        <createTable tableName="usuarios">
+            <column name="id_usuario" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nome" type="VARCHAR(150)"/>
+            <column name="email" type="VARCHAR(200)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="senha_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="idade" type="INT"/>
+            <column name="escolaridade" type="VARCHAR(120)"/>
+            <column name="area_atual" type="VARCHAR(120)"/>
+            <column name="nivel_risco" type="VARCHAR(60)"/>
+            <column name="tipo_perfil" type="VARCHAR(20)"/>
+            <column name="criado_em" type="DATE"/>
+        </createTable>
+
+        <createTable tableName="empresas">
+            <column name="id_empresa" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nome" type="VARCHAR(200)"/>
+            <column name="setor" type="VARCHAR(120)"/>
+            <column name="tamanho" type="VARCHAR(20)"/>
+            <column name="cnpj" type="VARCHAR(50)"/>
+        </createTable>
+
+        <createTable tableName="cursos">
+            <column name="id_curso" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nome" type="VARCHAR(200)"/>
+            <column name="categoria" type="VARCHAR(120)"/>
+            <column name="duracao_horas" type="INT"/>
+            <column name="plataforma" type="VARCHAR(120)"/>
+            <column name="nivel" type="VARCHAR(30)"/>
+            <column name="ativo" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+
+        <createTable tableName="recomendacoes">
+            <column name="id_recomendacao" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_usuario" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_rec_usuario" references="usuarios(id_usuario)"/>
+            </column>
+            <column name="id_curso" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_rec_curso" references="cursos(id_curso)"/>
+            </column>
+            <column name="score" type="DECIMAL(10,2)"/>
+            <column name="fonte" type="VARCHAR(20)"/>
+            <column name="status" type="VARCHAR(20)"/>
+            <column name="data_recomendacao" type="DATE"/>
+            <column name="cluster" type="VARCHAR(50)"/>
+            <column name="payload_ia" type="CLOB"/>
+        </createTable>
+
+        <createTable tableName="usuario_empresa">
+            <column name="id_usuario" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_ue_usuario" references="usuarios(id_usuario)"/>
+            </column>
+            <column name="id_empresa" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_ue_empresa" references="empresas(id_empresa)"/>
+            </column>
+            <column name="cargo" type="VARCHAR(120)"/>
+            <column name="data_inicio" type="DATE"/>
+        </createTable>
+        <addPrimaryKey tableName="usuario_empresa" columnNames="id_usuario,id_empresa" constraintName="pk_usuario_empresa"/>
+
+        <createTable tableName="recomendacao_log">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="id_recomendacao" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="fk_rec_log_recomendacao" references="recomendacoes(id_recomendacao)"/>
+            </column>
+            <column name="mensagem" type="VARCHAR(1000)"/>
+            <column name="criado_em" type="TIMESTAMP"/>
+        </createTable>
+
+        <insert tableName="usuarios">
+            <column name="id_usuario" valueNumeric="1"/>
+            <column name="nome" value="Admin SkillShift"/>
+            <column name="email" value="admin@skillshift.com"/>
+            <column name="senha_hash" value="admin123"/>
+            <column name="idade" valueNumeric="30"/>
+            <column name="escolaridade" value="Superior"/>
+            <column name="area_atual" value="Tecnologia"/>
+            <column name="nivel_risco" value="MEDIO"/>
+            <column name="tipo_perfil" value="ADMIN"/>
+            <column name="criado_em" valueDate="2024-01-01"/>
+        </insert>
+
+        <insert tableName="empresas">
+            <column name="id_empresa" valueNumeric="1"/>
+            <column name="nome" value="SkillShift Tech"/>
+            <column name="setor" value="Tecnologia"/>
+            <column name="tamanho" value="MEDIA"/>
+            <column name="cnpj" value="00.000.000/0001-00"/>
+        </insert>
+
+        <insert tableName="cursos">
+            <column name="id_curso" valueNumeric="1"/>
+            <column name="nome" value="Introducao a IA Generativa"/>
+            <column name="categoria" value="IA"/>
+            <column name="duracao_horas" valueNumeric="12"/>
+            <column name="plataforma" value="SkillShift"/>
+            <column name="nivel" value="INICIAL"/>
+            <column name="ativo" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="recomendacoes">
+            <column name="id_recomendacao" valueNumeric="1"/>
+            <column name="id_usuario" valueNumeric="1"/>
+            <column name="id_curso" valueNumeric="1"/>
+            <column name="score" valueNumeric="0.90"/>
+            <column name="fonte" value="MANUAL"/>
+            <column name="status" value="PENDENTE"/>
+            <column name="data_recomendacao" valueDate="2024-01-10"/>
+            <column name="cluster" value="1"/>
+            <column name="payload_ia" value="{}"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
