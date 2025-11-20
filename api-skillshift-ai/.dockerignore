@@ -1,0 +1,7 @@
+.git
+.github
+.idea
+target
+.DS_Store
+node_modules
+npm-debug.log
