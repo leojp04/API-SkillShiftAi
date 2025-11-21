@@ -30,8 +30,8 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
             return json(Response.Status.BAD_REQUEST, "Dados inválidos", null);
         }
 
-        if (exception instanceof JsonProcessingException) {
-            return json(Response.Status.BAD_REQUEST, "JSON inválido", List.of(exception.getOriginalMessage()));
+        if (exception instanceof JsonProcessingException jpe) {
+            return json(Response.Status.BAD_REQUEST, "JSON inválido", List.of(jpe.getOriginalMessage()));
         }
 
         if (exception instanceof WebApplicationException wae) {
