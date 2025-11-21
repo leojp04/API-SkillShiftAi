@@ -1,7 +1,9 @@
 package br.com.skillshift.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -25,6 +27,14 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
         if (exception instanceof ValidationException) {
             return json(Response.Status.BAD_REQUEST, "Dados inválidos", null);
+        }
+
+        if (exception instanceof JsonProcessingException) {
+            return json(Response.Status.BAD_REQUEST, "JSON inválido", List.of(exception.getOriginalMessage()));
+        }
+
+        if (exception instanceof WebApplicationException wae) {
+            return json(Response.Status.fromStatusCode(wae.getResponse().getStatus()), wae.getMessage(), null);
         }
 
         if (exception instanceof NotFoundException) {
