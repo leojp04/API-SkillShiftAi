@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,10 +50,11 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     }
 
     private Response json(Response.Status status, String message, List<String> details) {
-        Map<String, Object> body = Map.of(
-                "message", message,
-                "details", details
-        );
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", message);
+        if (details != null) {
+            body.put("details", details);
+        }
         return Response.status(status)
                 .type(MediaType.APPLICATION_JSON)
                 .entity(body)
